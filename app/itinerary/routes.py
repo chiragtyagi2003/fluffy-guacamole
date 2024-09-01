@@ -24,7 +24,42 @@ def generate_itinerary():
         return f"Failed to generate itinerary: {str(e)}", 500
 
 def create_prompt(source, budget, interests, duration):
-    return f"Generate a travel itinerary starting from {source} with a budget of {budget} rupees, focusing on the following interests: {interests}, for a duration of {duration} days. Return the response in JSON format only so it can be used in an API call."
+    return (
+        f"Generate a travel itinerary starting from {source} "
+        f"with a budget of {budget} rupees, focusing on the following interests: {interests}, "
+        f"for a duration of {duration} days. Return the response in JSON format only, ensuring it always follows this structure:\n\n"
+        "{\n"
+        "  \"budget\": {\n"
+        "    \"breakdown\": {\n"
+        "      \"accommodation\": \"string\",\n"
+        "      \"activities\": \"string\",\n"
+        "      \"food\": \"string\",\n"
+        "      \"miscellaneous\": \"string\",\n"
+        "      \"transportation\": \"string\"\n"
+        "    },\n"
+        "    \"total\": \"string\"\n"
+        "  },\n"
+        "  \"places\": \"comma-separated list of all places included in the itinerary\",\n"
+        "  \"itinerary\": {\n"
+        "    \"days\": [\n"
+        "      {\n"
+        "        \"day\": number,\n"
+        "        \"heading\": \"string\",\n"
+        "        \"description\": \"string\",\n"
+        "        \"activities\": [\n"
+        "          {\n"
+        "            \"name\": \"string\",\n"
+        "            \"type\": \"string\",\n"
+        "            \"cost\": \"string\"\n"
+        "          }\n"
+        "        ]\n"
+        "      }\n"
+        "    ]\n"
+        "  },\n"
+        "  \"notes\": \"string\"\n"
+        "}"
+    )
+        
 
 def call_gemini_api(prompt):
     response = model.generate_content(prompt)
@@ -71,5 +106,36 @@ def create_prompt_with_destination(source, destination, budget, interests, durat
     return (
         f"Generate a travel itinerary starting from {source} to {destination} "
         f"with a budget of {budget} rupees, focusing on the following interests: {interests}, "
-        f"for a duration of {duration} days. Return the response in JSON format only so it can be used in an API call."
-)
+        f"for a duration of {duration} days. Return the response in JSON format only, ensuring it always follows this structure:\n\n"
+        "{\n"
+        "  \"budget\": {\n"
+        "    \"breakdown\": {\n"
+        "      \"accommodation\": \"string\",\n"
+        "      \"activities\": \"string\",\n"
+        "      \"food\": \"string\",\n"
+        "      \"miscellaneous\": \"string\",\n"
+        "      \"transportation\": \"string\"\n"
+        "    },\n"
+        "    \"total\": \"string\"\n"
+        "  },\n"
+        "  \"places\": \"comma-separated list of all places included in the itinerary\",\n"  # New field for places
+        "  \"itinerary\": {\n"
+        "    \"days\": [\n"
+        "      {\n"
+        "        \"day\": number,\n"
+        "        \"heading\": \"string\",\n"
+        "        \"description\": \"string\",\n"
+        "        \"activities\": [\n"
+        "          {\n"
+        "            \"name\": \"string\",\n"
+        "            \"type\": \"string\",\n"
+        "            \"cost\": \"string\"\n"
+        "          }\n"
+        "        ]\n"
+        "      }\n"
+        "    ]\n"
+        "  },\n"
+        "  \"notes\": \"string\"\n"
+        "}"
+    )
+

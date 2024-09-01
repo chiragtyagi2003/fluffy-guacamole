@@ -5,10 +5,15 @@ from app.itinerary.routes import itinerary_bp
 from app.places.routes import places_bp
 from app.transportation.routes import transportation_bp
 from app.weather.routes import weather_bp
+from flask_cors import CORS
 
 
 def create_app():
     app = Flask(__name__)
+
+    # Enable CORS
+    CORS(app)  # This allows all origins
+
     
     # Load environment variables
     load_dotenv()

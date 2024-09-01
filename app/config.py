@@ -16,6 +16,6 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Initialize Google Maps API client
-gmaps = googlemaps.Client(key=os.getenv("GOOGLE_MAPS_API_KEY"))
+gmaps = googlemaps.Client(key="AIzaSyBvQn2U-8RObBlrWbots9zKUwIbCf0Uneg")
 
 

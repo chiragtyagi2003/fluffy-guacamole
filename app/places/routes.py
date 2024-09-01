@@ -6,7 +6,7 @@ from app.places import places_bp
 def get_places():
     location_name = request.args.get('location_name')
     radius = int(request.args.get('radius', 5000))
-    place_type = request.args.get('type')
+    place_type = request.args.get('type')   
 
     if not location_name:
         return jsonify({"error": "Location name is required"}), 400
