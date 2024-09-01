@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from app.auth.routes import auth_bp
 from app.itinerary.routes import itinerary_bp
 from app.places.routes import places_bp
+from app.transportation.routes import transportation_bp
 
 
 def create_app():
@@ -18,5 +19,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(itinerary_bp)
     app.register_blueprint(places_bp)
+    app.register_blueprint(transportation_bp)
+
     
     return app
