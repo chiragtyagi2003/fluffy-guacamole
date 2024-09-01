@@ -1,5 +1,4 @@
 firebase-admin
 flask
 python-dotenv
-googlemaps
 google-generativeai
