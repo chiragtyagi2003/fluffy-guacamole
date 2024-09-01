@@ -1,2 +1,3 @@
 .env
 venv/
+atlan_firebase_creds.json
