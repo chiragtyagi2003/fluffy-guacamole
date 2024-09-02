@@ -1,7 +1,8 @@
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from app.config import model
 from app.itinerary import itinerary_bp
 import json
+from datetime import datetime
 
 # Existing Itinerary API
 @itinerary_bp.route('/generate-itinerary', methods=['POST'])
@@ -59,7 +60,7 @@ def create_prompt(source, budget, interests, duration):
         "  \"notes\": \"string\"\n"
         "}"
     )
-        
+    
 
 def call_gemini_api(prompt):
     response = model.generate_content(prompt)
@@ -139,3 +140,61 @@ def create_prompt_with_destination(source, destination, budget, interests, durat
         "}"
     )
 
+
+
+@itinerary_bp.route('/save-itinerary', methods=['POST'])
+def save_itinerary():
+    try:
+        db = current_app.config['db']
+        users_collection = db['users']
+        
+        # Get the itinerary data from the request
+        data = request.get_json()
+
+        if not data or not data.get('user_email'):
+            return jsonify({"error": "No data or email provided"}), 400
+
+        user_email = data['user_email']
+
+        # Add a created_at timestamp to the itinerary
+        itinerary = {
+            "created_at": datetime.now(),
+            "itinerary_data": data['itinerary_data']  # Assuming `itinerary_data` contains the itinerary details
+        }
+
+        # Find the user by email and update their document by pushing the new itinerary into the itineraries array
+        result = users_collection.update_one(
+            {"email": user_email},
+            {"$push": {"itineraries": itinerary}}
+        )
+
+        if result.matched_count > 0:
+            return jsonify({"message": "Itinerary saved successfully!"}), 201
+        else:
+            return jsonify({"error": "User not found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@itinerary_bp.route('/fetch-itineraries', methods=['GET'])
+def fetch_itineraries():
+    try:
+        db = current_app.config['db']
+        users_collection = db['users']
+        
+        # Get the user's email from the query parameters
+        email = request.args.get('email')
+
+        if not email:
+            return jsonify({"error": "Email parameter is required"}), 400
+
+        # Fetch the user document with the matching email
+        user = users_collection.find_one({"email": email}, {'_id': 0, 'itineraries': 1})
+
+        if user and 'itineraries' in user:
+            return jsonify({"itineraries": user['itineraries']}), 200
+        else:
+            return jsonify({"message": "No itineraries found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

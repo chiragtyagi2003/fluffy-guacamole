@@ -47,3 +47,23 @@ def register():
         return jsonify({"token": custom_token.decode('utf-8')}), 201
     except Exception as e:
         return jsonify({"error": f"Registration failed: {str(e)}"}), 400
+
+
+@auth_bp.route('/user-info', methods=['GET'])
+def get_user_info():
+    email = request.args.get('email')  # Get the email from query parameters
+
+    if not email:
+        return jsonify({"error": "Email parameter is required"}), 400
+
+    try:
+        db = current_app.config['db']
+        users_collection = db['users']
+        user = users_collection.find_one({"email": email}, {'_id': 0})  # Fetch user by email, exclude the MongoDB ObjectID
+
+        if user:
+            return jsonify({"user": user}), 200
+        else:
+            return jsonify({"message": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
