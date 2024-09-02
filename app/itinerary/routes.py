@@ -24,6 +24,8 @@ def generate_itinerary():
     except Exception as e:
         return f"Failed to generate itinerary: {str(e)}", 500
 
+
+# function to create prompt for gemini api to generate itineray with source only in the defined json format
 def create_prompt(source, budget, interests, duration):
     return (
         f"Generate a travel itinerary starting from {source} "
@@ -61,7 +63,7 @@ def create_prompt(source, budget, interests, duration):
         "}"
     )
     
-
+# function to call gemini api
 def call_gemini_api(prompt):
     response = model.generate_content(prompt)
     response_text = response.text
@@ -103,6 +105,8 @@ def generate_itinerary_with_destination():
     except Exception as e:
         return f"Failed to generate itinerary: {str(e)}", 500
 
+
+# function to create prompt for gemini api to generate itineray with destination in the defined json format
 def create_prompt_with_destination(source, destination, budget, interests, duration):
     return (
         f"Generate a travel itinerary starting from {source} to {destination} "
@@ -141,7 +145,7 @@ def create_prompt_with_destination(source, destination, budget, interests, durat
     )
 
 
-
+# Endpoint for Saving user generated itineraries to mongo DB
 @itinerary_bp.route('/save-itinerary', methods=['POST'])
 def save_itinerary():
     try:
@@ -176,7 +180,7 @@ def save_itinerary():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-
+# Endpoint for Fetching saved itineraries from mongo DB
 @itinerary_bp.route('/fetch-itineraries', methods=['GET'])
 def fetch_itineraries():
     try:

@@ -49,6 +49,7 @@ def register():
         return jsonify({"error": f"Registration failed: {str(e)}"}), 400
 
 
+# Endpoint  getch user info from Mongo DB
 @auth_bp.route('/user-info', methods=['GET'])
 def get_user_info():
     email = request.args.get('email')  # Get the email from query parameters

@@ -3,6 +3,8 @@ from app.config import gmaps
 from app.transportation import transportation_bp
 from app.places.routes import get_lat_lon  # Reusing the get_lat_lon function
 
+
+# Endpoint for Get Directions
 @transportation_bp.route('/get-transportation', methods=['GET'])
 def get_transportation():
     origin_name = request.args.get('origin_name')  # Origin location name, e.g., 'New Delhi'
@@ -34,6 +36,8 @@ def get_transportation():
     except Exception as e:
         return f"Failed to fetch transportation details: {str(e)}", 500
 
+
+# Function to Geocode location name to latitute and longitude, using Google cloud geocoding api
 def get_lat_lon(location_name):
     geocode_result = gmaps.geocode(location_name)
     if not geocode_result:

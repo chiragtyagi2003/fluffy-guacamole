@@ -2,6 +2,8 @@ from flask import request, jsonify
 from app.config import gmaps
 from app.places import places_bp
 
+
+# Endpoint for  Get Places according to type
 @places_bp.route('/get-places', methods=['GET'])
 def get_places():
     location_name = request.args.get('location_name')
@@ -23,6 +25,7 @@ def get_places():
     except Exception as e:
         return f"Failed to fetch places: {str(e)}", 500
 
+# Function to Geocode location name to latitute and longitude, using Google cloud geocoding api
 def get_lat_lon(location_name):
     geocode_result = gmaps.geocode(location_name)
     if not geocode_result:
