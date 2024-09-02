@@ -12,7 +12,7 @@ firebase_admin.initialize_app(cred)
 # Set up the Google Gemini API key
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Initialize the Google Gemini model
+# Initialize the Google Gemini model    
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Initialize Google Maps API client
